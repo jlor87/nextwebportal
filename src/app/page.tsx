@@ -2,14 +2,16 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation'; 
 
 export default function Home() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
+  const router = useRouter();
+
   async function performLogin(event: React.FormEvent): Promise<void> {
     event.preventDefault();
-
+    
     try{
       const response = await fetch('/api/login',{
         method: 'POST',
@@ -25,6 +27,7 @@ export default function Home() {
       if(response.ok){
         const data = await response.json();
         console.log('Success:', data);
+        router.push('/dashboard');
       }
       else{
         const errorData = await response.json(); // Parse error JSON
@@ -40,7 +43,6 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center">
-        {/* ---- Original picture from the Next.js starting page ---- */}
         <Image
           className="dark:invert"
           src="/SAP Business One Logo.png"
