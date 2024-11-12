@@ -1,12 +1,40 @@
 "use client";
 
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   
   async function performLogin(event: React.FormEvent): Promise<void> {
     event.preventDefault();
 
+    try{
+      const response = await fetch('/api/login',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      });
+
+      if(response.ok){
+        const data = await response.json();
+        console.log('Success:', data);
+      }
+      else{
+        const errorData = await response.json(); // Parse error JSON
+        console.error('Error occurred while trying to log in:', errorData.message);
+      }
+    }
+    catch(error){
+      console.error('Error occurred while trying to log in:', error);
+      alert(error);
+    }
   }
 
   return (
@@ -24,9 +52,9 @@ export default function Home() {
 
         <form onSubmit={performLogin} className="flex flex-col items-center gap-0">
           <label htmlFor="username">Username</label>
-          <input type="text"></input>
+          <input type="text" onChange={(e) => setUsername(e.target.value)}></input>
           <label htmlFor="password">Password</label>
-          <input type="password"></input>
+          <input type="password" onChange={(e) => setPassword(e.target.value)}></input>
           <div className="flex gap-4 items-center flex-col sm:flex-row">
           <button type="submit"
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 mt-4"
@@ -42,8 +70,6 @@ export default function Home() {
           </button>
         </div>
         </form>
-
-        {/* ---- Original buttons from the Next.js starting page ---- */}  
 
       </main>
       {/* ---- Footer ---- */}
