@@ -2,9 +2,45 @@
 import { useRouter } from "next/navigation";
 import BarChart from "@/components/BarChart";
 import PieChart from "@/components/PieChart";
+import LineGraph from "@/components/LineGraph";
+import Image from 'next/image';
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
 
 export default function Home() {
   const router = useRouter();
+
+  type SalesData = {
+    'Order No.': number;
+    Customer: string;
+    Product: string;
+    Quantity: number;
+    Cost: number;
+    'Total Sale': number;
+  };
+  const fakeSalesDataInput = [
+    {
+    'Order No.': 1,
+    'Customer': 'Bob',
+    'Product': 'Bobby Pins',
+    'Quantity': 5000,
+    'Cost': 2,
+    'Total Sale': 2
+    },
+    {
+      'Order No.': 2,
+      'Customer': 'Joe',
+      'Product': 'Sloppy Joes',
+      'Quantity': 2,
+      'Cost': 200,
+      'Total Sale': 400
+      },
+    ];
+  const [fakeSalesData, setFakeSalesData] = useState<SalesData[] | null>(null)
+
+  useEffect(() =>{
+    setFakeSalesData(fakeSalesDataInput);
+  }, []);
 
   const performLogout = () => {
     // Clear any authentication tokens or session data if needed
@@ -55,6 +91,29 @@ export default function Home() {
           <p className="text-5xl font-bold text-center text-green-500">197%</p>
         </div>
 
+        <div className="flex flex-col items-center  p-4 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2 text-center">David Salesman</h2>
+          <div className="justify-center">
+            <Image 
+              src="/salesman.jpg"
+              alt="David Salesman"
+              width={200}
+              height={200}
+              className="rounded-full"
+            />  
+          </div>
+        </div>
+
+        <div className="p-4 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2 text-center">Pie Chart About Something</h2>
+          <PieChart />
+        </div>
+
+        <div className="p-4 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2 text-center">A Line Graph</h2>
+          <LineGraph />
+        </div>
+
         <div className="p-4 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-2 text-center">To-Do Bullet Points</h2>
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', color: 'black' }}>
@@ -64,26 +123,46 @@ export default function Home() {
           </ul>
         </div>
 
-        <div className="p-4 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-2 text-center">Pie Chart About Something</h2>
-          <PieChart />
+        <div className="col-span-2 p-4 bg-white rounded-lg shadow-md overflow-x-auto"> 
+          <h2 className="text-xl font-semibold mb-2 text-center">Recent Sales</h2>
+            <table>
+              <thead>
+                <tr className="bg-blue-200">
+                  <th className="text-center pl-2 pr-2">Order No.</th>
+                  <th className="text-center pl-2 pr-2">Customer</th>
+                  <th className="text-center pl-2 pr-2">Product</th>
+                  <th className="text-center pl-2 pr-2">Quantity</th>
+                  <th className="text-center pl-2 pr-2">Cost</th>
+                  <th className="text-center pl-2 pr-2">Total Sale</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {fakeSalesData && fakeSalesData.map((item:SalesData) =>
+                <tr className="bg-blue-100" key={item['Order No.']}>
+                  <td className="text-center pl-2 pr-2">{item['Order No.']}</td>
+                  <td className="text-center pl-2 pr-2">{item['Customer']}</td>
+                  <td className="text-center pl-2 pr-2">{item['Product']}</td>
+                  <td className="text-center pl-2 pr-2">{item['Quantity']}</td>
+                  <td className="text-center pl-2 pr-2">${item['Cost']}</td>
+                  <td className="text-center pl-2 pr-2">${item['Total Sale']}</td>
+                </tr>)
+                }
+              </tbody>
+            </table>
         </div>
 
         <div className="p-4 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-2 text-center">Another Widget Title</h2>
-          <p>Stuff and content here</p>
+          <h2 className="text-xl font-semibold mb-2 text-center">A Calendar</h2>
+          <Calendar />
         </div>
 
-        <div className="p-4 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-2 text-center">Insert Yet Another Widget Title</h2>
-          <p>Stuff and content here</p>
-        </div>
       </div>
 
       {/* Right Sidebar */}
-      <div className="bg-white p-4 shadow-md rounded-lg">
-        <h2 className="text-xl font-semibold mb-4 text-center">Right Sidebar (Buttons)</h2>
-        <button onClick={performLogout} className="hover:underline">
+      <div className="flex flex-col bg-white p-4 shadow-md rounded-lg">
+        <h2 className="text-xl font-semibold mb-4 text-center item-center">Right Sidebar (Buttons)</h2>
+        <button onClick={performLogout} className="justify-center bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 h-10">
           Logout
         </button>
       </div>

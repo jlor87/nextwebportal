@@ -11,16 +11,16 @@ import {
   ChartOptions,
 } from 'chart.js';
 
-// Register the required components with Chart.js
+// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarChart = () => {
   const data: ChartData<'bar'> = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    labels: ['January', 'April', 'July', 'Oct'], // 4 labels
     datasets: [
       {
         label: 'Sales',
-        data: [65, 59, 80, 42, 75, 54, 63, 40, 68, 88, 75, 64],
+        data: [65, 80, 42, 75], // 4 data points
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
     ],
@@ -34,12 +34,14 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Sales',
+        text: 'Quarterly Sales',
       },
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return (
+      <Bar data={data} options={options} />
+  );
 };
 
 export default BarChart;
